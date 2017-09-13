@@ -12,7 +12,8 @@ following code starts up the engine and loads the level, as per tutorial 2.
 */
 #include <irrlicht.h>
 #include "driverChoice.h"
-
+#include "btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
 using namespace irr;
 
 #ifdef _MSC_VER
@@ -37,33 +38,40 @@ enum
 
 int main()
 {
+
+	//btBoxShape* box = new btBoxShape(btVector3(1, 1, 1));
 	// ask user for driver
-	video::E_DRIVER_TYPE driverType=driverChoiceConsole();
-	if (driverType==video::EDT_COUNT)
-		return 1;
-
+	//video::E_DRIVER_TYPE driverType=driverChoiceConsole();
+	
+	//if (driverType==video::EDT_COUNT)
+	//	return 1;
+	//video::EDT_OPENGL. 
 	// create device
-
+	/*
 	IrrlichtDevice *device =
 		createDevice(driverType, core::dimension2d<u32>(640, 480), 16, false);
-
+		*/
+	IrrlichtDevice *device =
+		createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false);
+	scene::IMetaTriangleSelector* mainTriangleSelector = 0;
 	if (device == 0)
 		return 1; // could not create selected driver.
 
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
-
+	mainTriangleSelector = smgr->createMetaTriangleSelector();
+	scene::ITriangleSelector* s = 0; 
 	//device->getFileSystem()->addFileArchive("../../media/map-20kdm2.pk3");
 	//device->getFileSystem()->addFileArchive("../../media/tavp.ms3d");
 	//scene::IAnimatedMesh* q3levelmesh = smgr->getMesh("20kdm2.bsp");
-	//scene::IAnimatedMesh* q3levelmesh = smgr->getMesh("taverns.stl");
+	//scene::IAnimatedMesh* q3levelmesh = smgr->getMesh("TavernNearly.ms3d");
 	//scene::IAnimatedMesh* q3levelmesh = smgr->getMesh("taverns.stl");
 	//scene::IAnimatedMeshSceneNode* q3levelmesh = 0;
 	/*
 	q3levelmesh = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/tavp.ms3d"),
 						0, IDFlag_IsPickable | IDFlag_IsHighlightable);
-		*/				
-	scene::IMeshSceneNode* q3node = 0;
+		*/			
+	//scene::IMeshSceneNode* q3node = 0;
 
 	// The Quake mesh is pickable, but doesn't get highlighted.
 	/*
@@ -86,7 +94,7 @@ int main()
 	*/
 
 	scene::ITriangleSelector* selector = 0;
-
+	/*
 	if (q3node)
 	{
 		q3node->setPosition(core::vector3df(-1350,-130,-1400));
@@ -96,7 +104,7 @@ int main()
 		q3node->setTriangleSelector(selector);
 		// We're not done with this selector yet, so don't drop it.
 	}
-
+	*/
 
 	/*
 	We add a first person shooter camera to the scene so that we can see and
@@ -137,10 +145,13 @@ int main()
 	// Set a jump speed of 3 units per second, which gives a fairly realistic jump
 	// when used with the gravity of (0, -10, 0) in the collision response animator.
 	scene::ICameraSceneNode* camera =
-		smgr->addCameraSceneNodeFPS(0, 100.0f, .3f, ID_IsNotPickable, 0, 0, true, 3.f);
-	camera->setPosition(core::vector3df(50,50,-60));
+		smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, ID_IsNotPickable, 0, 0, true, 3.f);
+	camera->setPosition(core::vector3df(-100,50,50));
 	camera->setTarget(core::vector3df(-70,30,-60));
-
+	
+	//50, 50, -60
+	/*
+	
 	if (selector)
 	{
 		scene::ISceneNodeAnimator* anim = smgr->createCollisionResponseAnimator(
@@ -150,7 +161,7 @@ int main()
 		camera->addAnimator(anim);
 		anim->drop();  // And likewise, drop the animator when we're done referring to it.
 	}
-
+	*/
 	// Now I create three animated characters which we can pick, a dynamic light for
 	// lighting them, and a billboard for drawing where we found an intersection.
 
@@ -217,7 +228,7 @@ int main()
 	selector = smgr->createTriangleSelector(node);
 	node->setTriangleSelector(selector);
 	selector->drop();
-
+	
 	
 	// And this mdl file uses skinned skeletal animation.
 	node = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/yodan.mdl"),
@@ -227,12 +238,49 @@ int main()
 	node->getMaterial(0).Lighting = true;
 	node->setAnimationSpeed(20.f);
 	*/
-		node = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/tavp.ms3d"),
-						0, IDFlag_IsPickable | IDFlag_IsHighlightable);
-	node->setPosition(core::vector3df(-90,-25,20));
-	node->setScale(core::vector3df(0.8f));
+
+		node = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../../media/Tavern.3ds"),
+						0, ID_IsNotPickable | IDFlag_IsHighlightable);
+	node->setPosition(core::vector3df(0,-20,0));
+	//node->setScale(core::vector3df(0.8f));
+	node->getMaterial(0).NormalizeNormals = true;
 	node->getMaterial(0).Lighting = true;
-	node->setAnimationSpeed(20.f);
+	selector = smgr->createTriangleSelector(node);
+	node->setTriangleSelector(selector);
+	selector->drop();
+	//node->setAnimationSpeed(20.f);
+	
+
+	//scene::ITriangleSelector* selector1 = 0;
+	scene::IMeshSceneNode* q3node = 0;
+	//	if (node)
+	//	smgr->addOctreeSceneNode(node->getMesh(), 0, IDFlag_IsPickable);
+		
+
+	if (node)
+	{
+		//node->setPosition(core::vector3df(0,-20,0));
+		
+		selector = smgr->createOctreeTriangleSelector(
+				node->getMesh(), node, 128);
+		s=smgr->createTriangleSelectorFromBoundingBox(node);
+		//node->setTriangleSelector(s);
+		mainTriangleSelector->addTriangleSelector(s);
+		node->setTriangleSelector(s);
+		//node->setTriangleSelector(selector);
+		// We're not done with this selector yet, so don't drop it.
+	}
+
+	
+		if (selector)
+	{
+		scene::ISceneNodeAnimator* anim1 = smgr->createCollisionResponseAnimator(
+			selector, camera, core::vector3df(5,5,5),
+			core::vector3df(0,-10,0), core::vector3df(0,13,0));
+		//selector->drop(); // As soon as we're done with the selector, drop it.
+		camera->addAnimator(anim1);
+		anim1->drop();  // And likewise, drop the animator when we're done referring to it.
+	}
 	
 
 	// Just do the same as we did above.
@@ -244,7 +292,7 @@ int main()
 	material.Lighting = false;
 
 	// Add a light, so that the unselected nodes aren't completely dark.
-	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(-60,100,400),
+	scene::ILightSceneNode * light = smgr->addLightSceneNode(0, core::vector3df(0,600,0),
 		video::SColorf(1.0f,1.0f,1.0f,1.0f), 600.0f);
 	light->setID(ID_IsNotPickable); // Make it an invalid target for selection.
 
@@ -255,7 +303,7 @@ int main()
 
 	// draw the selection triangle only as wireframe
 	material.Wireframe=true;
-
+	//this is all drawing triangles stuff, can be ignored/removed
 	while(device->run())
 	if (device->isWindowActive())
 	{
