@@ -52,7 +52,7 @@ int main()
 		createDevice(driverType, core::dimension2d<u32>(640, 480), 16, false);
 		*/
 	IrrlichtDevice *device =
-		createDevice(video::EDT_OPENGL, core::dimension2d<u32>(640, 480), 16, false);
+		createDevice(video::EDT_OPENGL, core::dimension2d<u32>(1280, 720), 16, false);
 	scene::IMetaTriangleSelector* mainTriangleSelector = 0;
 	if (device == 0)
 		return 1; // could not create selected driver.
@@ -177,6 +177,9 @@ int main()
 	bill->setMaterialFlag(video::EMF_ZBUFFER, false);
 	bill->setSize(core::dimension2d<f32>(20.0f, 20.0f));
 	bill->setID(ID_IsNotPickable); // This ensures that we don't accidentally ray-pick it
+
+	video::ITexture* images = driver->getTexture("../dependencies/textures/SplashScreen.png");
+    driver->makeColorKeyTexture(images, core::position2d<s32>(0,0));
 
 	/* Add 3 animated hominids, which we can pick using a ray-triangle intersection.
 	They all animate quite slowly, to make it easier to see that accurate triangle
@@ -389,3 +392,33 @@ int main()
 
 	return 0;
 }
+
+class MyEventReceiver : public IEventReceiver
+{
+public:
+    // This is the one method that we have to implement
+    virtual bool OnEvent(const SEvent& event)
+    {
+        // Remember whether each key is down or up
+        if (event.EventType == irr::EET_KEY_INPUT_EVENT)
+            KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+
+        return false;
+    }
+
+    // This is used to check whether a key is being held down
+    virtual bool IsKeyDown(EKEY_CODE keyCode) const
+    {
+        return KeyIsDown[keyCode];
+    }
+    
+    MyEventReceiver()
+    {
+        for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
+            KeyIsDown[i] = false;
+    }
+
+private:
+    // We use this array to store the current state of each key
+    bool KeyIsDown[KEY_KEY_CODES_COUNT];
+};
