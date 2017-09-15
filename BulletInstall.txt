@@ -1,0 +1,11 @@
+Bullet install
+
+Install cmake
+
+http://cmake.org
+download and run the cmake-3.9.2-win64-x64.msi file
+
+basic tutorial for bullet install is found here
+http://bulletphysics.org/mediawiki-1.5.8/index.php/Creating_a_project_from_scratch
+
+follow step by step, keep in mind when linking include directories is that you link the bullet src that you downloaded, not the one cmake makes
