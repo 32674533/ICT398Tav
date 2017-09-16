@@ -120,7 +120,7 @@ int main()
 	device->drop();
 
 	return 0;
-}}
+}
 
 class MyEventReceiver : public IEventReceiver
 {
