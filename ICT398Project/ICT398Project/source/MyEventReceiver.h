@@ -16,6 +16,39 @@ public:
         // Remember whether each key is down or up
         if (event.EventType == irr::EET_KEY_INPUT_EVENT)
             KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+		
+		if(event.EventType == irr::EET_MOUSE_INPUT_EVENT) 
+		{ 
+			//left mouse button 
+			if (event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN) 
+			{ 
+				KeyIsDown[KEY_LBUTTON] = 1;//on  
+			} 
+			if (event.MouseInput.Event == EMIE_LMOUSE_LEFT_UP) 
+			{ 
+				KeyIsDown[KEY_LBUTTON] = 0;//off 
+			} 
+
+			//right mouse button 
+			if (event.MouseInput.Event == EMIE_MMOUSE_PRESSED_DOWN) 
+			{ 
+				KeyIsDown[KEY_MBUTTON] = 1;//on  
+			} 
+			if (event.MouseInput.Event == EMIE_MMOUSE_LEFT_UP) 
+			{ 
+				KeyIsDown[KEY_MBUTTON] = 0;//off  
+			} 
+
+			//right mouse button 
+			if (event.MouseInput.Event == EMIE_RMOUSE_PRESSED_DOWN) 
+			{ 
+				KeyIsDown[KEY_RBUTTON] = 1;//on 
+			} 
+			if (event.MouseInput.Event == EMIE_RMOUSE_LEFT_UP) 
+			{ 
+				KeyIsDown[KEY_RBUTTON] = 0;//off 
+			}
+		}
 
         return false;
     }
@@ -25,7 +58,7 @@ public:
     {
         return KeyIsDown[keyCode];
     }
-    
+
     MyEventReceiver()
     {
         for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)

@@ -9,7 +9,8 @@
         */
 
 #include <irrlicht.h>
-//#include "driverChoice.h"
+#include <driverChoice.h>
+#include "MyEventReceiver.h"
 //this is here for in the future in case implementation of bullet is needed
 //#include "btBulletCollisionCommon.h"
 //#include "btBulletDynamicsCommon.h"
@@ -25,22 +26,45 @@ enum
 
 int main()
 {
+	// create device
+    MyEventReceiver receiver;
+
 	//Irrlicht gives us a variety of devices to choose from, we are using openGL
 	//device type, window size, bits per pixel in fullscreen fullscreen or not
-	IrrlichtDevice *device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(1280, 720), 16, false);
+	IrrlichtDevice *device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(1280, 720), 16, false, false, false, &receiver);
 	scene::IMetaTriangleSelector* mainTriangleSelector = 0;
 	if (device == 0)
 		return 1; // could not create selected driver.
 
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
+
 	//mainTriangleSelector = smgr->createMetaTriangleSelector();
 	//scene::ITriangleSelector* s = 0; 
 	scene::ITriangleSelector* selector = 0;
 	
 	//if we have time, get rid of this and make our own camera controls, default ones are super weird, j = jump, arrow keys to move
-	scene::ICameraSceneNode* camera =
-		smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, 0, 0, true, 3.f);
+	//wasd navigation
+	SKeyMap keyMap[8];
+
+	keyMap[1].Action = EKA_MOVE_FORWARD;
+	keyMap[1].KeyCode = KEY_KEY_W;
+
+	keyMap[3].Action = EKA_MOVE_BACKWARD;
+	keyMap[3].KeyCode = KEY_KEY_S;
+
+	keyMap[5].Action = EKA_STRAFE_LEFT;
+	keyMap[5].KeyCode = KEY_KEY_A;
+
+	keyMap[7].Action = EKA_STRAFE_RIGHT;
+	keyMap[7].KeyCode = KEY_KEY_D;
+
+	//fps cam
+	scene::ICameraSceneNode* camera = 
+		smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, 0, keyMap, 8, 3.f);
+
+	//scene::ICameraSceneNode* camera =
+		//smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, 0, 0, true, 3.f);
 	camera->setPosition(core::vector3df(-100,50,50));
 	camera->setTarget(core::vector3df(-70,30,-60));
 	
@@ -64,6 +88,7 @@ int main()
 	// Loading of Splash Screen
 	video::ITexture* images = driver->getTexture("../dependencies/textures/SplashScreen.png");
     driver->makeColorKeyTexture(images, core::position2d<s32>(0,0));
+	bool SplashScreenCheck = false;
 
 	if (node)
 	{	
@@ -97,9 +122,25 @@ int main()
 	while(device->run())
 	if (device->isWindowActive())
 	{
+
 		driver->beginScene(true, true, 0);
 		smgr->drawAll();
 		// We're all done drawing, so end the scene.
+
+		if(receiver.IsKeyDown(irr::KEY_KEY_X))
+		{
+			SplashScreenCheck = true;
+		}
+		if (SplashScreenCheck == true)
+		{
+			driver->draw2DImage(images, core::position2d<s32>(300,50),
+			core::rect<s32>(0,0,600,600), 0,
+			video::SColor(255,255,255,255), true);
+			if(receiver.IsKeyDown(irr::KEY_LBUTTON))
+			{
+				exit(0);
+			}
+		}
 		driver->endScene();
 		//remove this code after we get splash screen working
 		int fps = driver->getFPS();
