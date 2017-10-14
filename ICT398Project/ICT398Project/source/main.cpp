@@ -10,6 +10,7 @@
 
 #include <irrlicht.h>
 #include <driverChoice.h>
+#include "GameObject.h"
 #include "MyEventReceiver.h"
 //this is here for in the future in case implementation of bullet is needed
 //#include "btBulletCollisionCommon.h"
@@ -26,6 +27,7 @@ enum
 
 int main()
 {
+	
 	// create device
     MyEventReceiver receiver;
 
@@ -73,16 +75,21 @@ int main()
 
 	// The loading of the actual model
 	scene::IAnimatedMeshSceneNode* node = 0;
+	//GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* node);
+	GameObject t1("../dependencies/models/cube.3ds", 0, 20, 0, 20, smgr, node);
+	t1.setScale(20, node);
+	//GameObject t2;
 
+	
 	node = smgr->addAnimatedMeshSceneNode(smgr->getMesh("../dependencies/models/Tavern.3ds"), 0);
 	 //sets the location of the model
 	node->setPosition(core::vector3df(0,-20,0));
 	//node->setScale(core::vector3df(0.8f));
 	node->getMaterial(0).NormalizeNormals = true;
 	node->getMaterial(0).Lighting = true;
-	selector = smgr->createTriangleSelector(node);
+	//selector = smgr->createTriangleSelector(node);
 	node->setTriangleSelector(selector);
-	selector->drop();
+	//selector->drop();
 	//node->setAnimationSpeed(20.f);
 	
 	// Loading of Splash Screen
