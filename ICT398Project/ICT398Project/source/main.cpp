@@ -12,8 +12,8 @@
 #include <driverChoice.h>
 #include "MyEventReceiver.h"
 //this is here for in the future in case implementation of bullet is needed
-//#include "btBulletCollisionCommon.h"
-//#include "btBulletDynamicsCommon.h"
+#include "btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
 using namespace irr;
 
 #ifdef _MSC_VER
