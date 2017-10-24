@@ -76,8 +76,11 @@ int main()
 	// The loading of the actual model
 	scene::IAnimatedMeshSceneNode* node = 0;
 	//GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* node);
-	GameObject t1("../dependencies/models/cube.3ds", 0, 20, 0, 20, smgr, node);
-	t1.setScale(20, node);
+	//from starting position towards you is -x, right is -z
+	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, smgr);
+	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, smgr);
+	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, smgr);
+	//t1.setScale(0.001);
 	//GameObject t2;
 
 	
