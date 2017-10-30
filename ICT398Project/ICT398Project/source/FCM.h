@@ -1,5 +1,15 @@
 #pragma once
 #include <armadillo>
+//using armadillo library download can be found at http://arma.sourceforge.net/download.html
+//this is how armadillo wants to be referenced
+/*
+Conrad Sanderson and Ryan Curtin.
+Armadillo: a template-based C++ library for linear algebra.
+Journal of Open Source Software, Vol. 1, pp. 26, 2016. 
+*/
+
+
+//could probs even merge this into methods in the agent class, would save the pain that is filling the matrix, however I feel like it's better if split-maybe
 using namespace arma;
 class FCM
 {

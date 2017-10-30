@@ -44,6 +44,8 @@ void FCM::NewMatrix(){
 	//oooor I could keep it as 1 and have a linear activation function
 	//B(new) = f*(A(old) * A) + A(old)
 	//what I am missing here is what I do with the new values for the emotions?
+	//keep a close eye on wether or not commenting out //#define ARMA_USE_LAPACK and //#define ARMA_USE_BLAS
+	//negatively affect the matrix operations-shouldn't
 	B = (B / (1 + abs(x)))*(Bold * A) +Bold;
 }
 
