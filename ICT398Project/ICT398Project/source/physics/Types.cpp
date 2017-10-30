@@ -2,6 +2,10 @@
 
 using namespace types;
 
+Vector3D types::operator-(const Vector3D& v1, const Vector3D& v2){
+	return Vector3D(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+}
+
 Vector3D types::operator*(const Matrix3x3& m, const Vector3D& v){
 	return Vector3D((m.columns[0].x * v.x) + (m.columns[1].x * v.y) + (m.columns[2].x * v.z),
 					(m.columns[0].y * v.x) + (m.columns[1].y * v.y) + (m.columns[2].y * v.z),
@@ -12,6 +16,10 @@ Vector3D types::operator*(const Vector3D& v, const Matrix3x3& m){
 	return Vector3D((v.x * m.columns[0].x) + (v.y * m.columns[0].y) + (v.z * m.columns[0].z),
 					(v.x * m.columns[1].x) + (v.y * m.columns[1].y) + (v.z * m.columns[1].z),
 					(v.x * m.columns[2].x) + (v.y * m.columns[2].y) + (v.z * m.columns[2].z));
+}
+
+Vector3D types::operator*(const float& d, const Vector3D& v){
+	return Vector3D(d * v.x, d * v.y, d * v.z);
 }
 
 Matrix3x3 types::operator*(const Matrix3x3& m1, const Matrix3x3& m2){

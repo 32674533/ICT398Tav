@@ -67,10 +67,10 @@ Vector3D physics::linearImpulse(double cor, Vector3D normal, Vector3D initLinVel
 								Vector3D radiusVec2, double mass1, double mass2, Matrix3x3 inertia1, Matrix3x3 inertia2){
 	Vector3D reactionVec = Vector3D();
 
-	/*
+	
 	reactionVec = ((-(1 + cor) * (normal.dotProduct(initLinVel1 - initLinVel2) + initRotVel1.dotProduct(radiusVec1.crossProduct(normal)) - initRotVel2.dotProduct(radiusVec2.crossProduct(normal)))) /
-				  ((1 / mass1) + (1 / mass2) + ((radiusVec1.crossProduct(normal) * (inertia1.inverse() * radiusVec1.crossProduct(normal))) + (radiusVec2.crossProduct(normal) * (inertia2.inverse() * radiusVec2.crossProduct(normal))))) * normal;
-	*/
+				  ((1 / mass1) + (1 / mass2) + ((radiusVec1.crossProduct(normal).dotProduct(inertia1.inverse() * radiusVec1.crossProduct(normal))) + (radiusVec2.crossProduct(normal).dotProduct(inertia2.inverse() * radiusVec2.crossProduct(normal)))))) * normal;
+	
 
 	return reactionVec;
 }

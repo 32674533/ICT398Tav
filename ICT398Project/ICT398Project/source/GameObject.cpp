@@ -15,7 +15,7 @@ GameObject::GameObject(io::path model, float x, float y, float z, scene::ISceneM
 	//io::path test = model;
 	node = 0;
 	node = smgr->addAnimatedMeshSceneNode(smgr->getMesh(modelFile), 0);
-	node->setPosition(core::vector3df(xPos,yPos,zPos));
+	node->setPosition(core::vector3df(xPos,yPos,zPos)); // Why does this line cause the game to crash?
 	//node->setScale(core::vector3df(2000.0f));
 	node->getMaterial(0).NormalizeNormals = true;
 	node->getMaterial(0).Lighting = true;

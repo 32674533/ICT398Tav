@@ -416,6 +416,15 @@ namespace types{
 	};
 
 	/**
+	* @brief An overridden subtraction operator for finding the vector between two other vectors.
+	* @param v1 - The finishing point of the resulting vector
+	* @param v2 - The starting point of the resulting vector
+	* @return Vector3D - The vector resulting from the operation
+	*
+	* This overrides the subraction operator to reflect vector subtraction.
+	*/
+	Vector3D operator-(const Vector3D& v1, const Vector3D& v2);
+	/**
 	* @brief An overridden multiplication operator for matrix * vector calculations.
 	* @param m - The matrix to be multiplied
 	* @param v - The vector to be multiplied
@@ -435,6 +444,10 @@ namespace types{
 	* vector with a matrix operates.
 	*/
 	Vector3D operator*(const Vector3D& v, const Matrix3x3& m);
+	/**
+	*
+	*/
+	Vector3D operator*(const float& d, const Vector3D& v);
 	/**
 	* @brief An overridden multiplication operator for matrix multiplication.
 	* @param m1 - The matrix to be pre-multiplied

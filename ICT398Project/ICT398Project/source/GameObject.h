@@ -9,7 +9,7 @@
 #include "affordance.h"
 #include <irrlicht.h>
 #include <driverChoice.h>
-#include "Agent.h"
+//#include "Agent.h"
 using namespace irr;
 #ifdef _MSC_VER
 #pragma comment(lib, "Irrlicht.lib")
