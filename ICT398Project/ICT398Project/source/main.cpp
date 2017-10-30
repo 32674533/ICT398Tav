@@ -27,7 +27,15 @@ enum
 
 int main()
 {
-	
+	// Bullet setup
+	btCollisionConfiguration* collisionConfig;
+	btCollisionDispatcher* dispatch;
+	btBroadphaseInterface* broadphase;
+	btCollisionWorld* collisionWorld;
+
+	collisionConfig = new btDefaultCollisionConfiguration();
+	dispatch = new btCollisionDispatcher(collisionConfig);
+
 	// create device
     MyEventReceiver receiver;
 

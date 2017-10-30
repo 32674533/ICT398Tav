@@ -19,6 +19,10 @@ GameObject::GameObject(io::path model, float x, float y, float z, scene::ISceneM
 	//node->setScale(core::vector3df(2000.0f));
 	node->getMaterial(0).NormalizeNormals = true;
 	node->getMaterial(0).Lighting = true;
+
+	// Bullet stuff
+	collider = new btCollisionObject();
+	collider->getWorldTransform().setOrigin(btVector3((btScalar)xPos, (btScalar)yPos, (btScalar)zPos));
 }
 
 void GameObject::setScale(float scal){

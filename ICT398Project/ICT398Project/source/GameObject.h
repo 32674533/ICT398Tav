@@ -10,6 +10,8 @@
 #include <irrlicht.h>
 #include <driverChoice.h>
 //#include "Agent.h"
+#include "btBulletCollisionCommon.h"
+#include "btBulletDynamicsCommon.h"
 using namespace irr;
 #ifdef _MSC_VER
 #pragma comment(lib, "Irrlicht.lib")
@@ -34,6 +36,7 @@ private:
 	float scale;
 	affordance affVect[10];
 	scene::IAnimatedMeshSceneNode* node;
+	btCollisionObject* collider;
 };
 
 
