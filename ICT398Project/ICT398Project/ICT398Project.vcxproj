@@ -56,11 +56,14 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../dependencies/include;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>irrlicht.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../dependencies/lib</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(SolutionDir)dependencies\DLLs\*" "$(OutDir)"</Command>
@@ -90,7 +93,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\affordance.cpp" />
-    <ClCompile Include="source\Agent.cpp" />
     <ClCompile Include="source\GameObject.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\MyEventReceiver.h" />
@@ -110,7 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\affordance.h" />
-    <ClInclude Include="source\Agent.h" />
     <ClInclude Include="source\GameObject.h" />
     <ClInclude Include="source\physics\equations.h" />
     <ClInclude Include="source\physics\Types.h" />

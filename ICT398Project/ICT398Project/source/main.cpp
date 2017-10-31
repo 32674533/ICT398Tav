@@ -13,8 +13,8 @@
 #include "GameObject.h"
 #include "MyEventReceiver.h"
 //this is here for in the future in case implementation of bullet is needed
-#include "btBulletCollisionCommon.h"
-#include "btBulletDynamicsCommon.h"
+#include "../bullet3-2.86.1/src/btBulletCollisionCommon.h"
+#include "../bullet3-2.86.1/src/btBulletDynamicsCommon.h"
 using namespace irr;
 
 #ifdef _MSC_VER
