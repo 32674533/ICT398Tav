@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Mario\Desktop\Uni work\Year 4\Semester 2\ICT398\bullet3-2.86.1\Extras\Serialize\BulletWorldImporter\btBulletWorldImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\Mario\Desktop\Uni work\Year 4\Semester 2\ICT398\bullet3-2.86.1\Extras\Serialize\BulletWorldImporter\btWorldImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Mario\Desktop\Uni work\Year 4\Semester 2\ICT398\bullet3-2.86.1\Extras\Serialize\BulletWorldImporter\btBulletWorldImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\Users\Mario\Desktop\Uni work\Year 4\Semester 2\ICT398\bullet3-2.86.1\Extras\Serialize\BulletWorldImporter\btWorldImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Mario\Desktop\Uni work\Year 4\Semester 2\ICT398\bullet3-2.86.1\Extras\Serialize\BulletWorldImporter\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{98D53BCD-10F3-37A2-AE80-C3FB388318C4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{BA2E265C-0505-35A1-9165-22D0589A8E87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
