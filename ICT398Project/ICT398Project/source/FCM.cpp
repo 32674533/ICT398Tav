@@ -26,11 +26,11 @@ void FCM::FillMatrixB(int px, int py, float point){
 }
 
 float FCM::GetMatrixA(int px, int py){
-	return A(px, py);
+	return (float)A(px, py);
 }
 
 float FCM::GetMatrixB(int px, int py){
-	return B(px, py);
+	return (float)B(px, py);
 }
 
 void FCM::NewMatrix(){
@@ -46,6 +46,7 @@ void FCM::NewMatrix(){
 	//what I am missing here is what I do with the new values for the emotions?
 	//keep a close eye on wether or not commenting out //#define ARMA_USE_LAPACK and //#define ARMA_USE_BLAS
 	//negatively affect the matrix operations-shouldn't
+	//need to test out clamping results between 1 and 0 dunno if it currently does that
 	B = (B / (1 + abs(x)))*(Bold * A) +Bold;
 }
 

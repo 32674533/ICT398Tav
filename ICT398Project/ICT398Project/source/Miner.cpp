@@ -1,27 +1,57 @@
-#include "Agent.h"
+#include "Miner.h"
+#include "MinerOwnedStates.h"
 
+Miner::Miner(int id):BaseGameEntity(id),
+                     m_pCurrentState(Wander::Instance())
+                                                                  
+{}
 
-enum 
-{
-  ent_Miner_Bob,
+Miner::Miner(){
 
-  ent_Elsa
-};
-
-Agent::Agent(void)
-{
-	
-	//I guess have another constructor that gives default values for
-	//each emotion
-	//how to handle the connections? guess?
 }
 
-GameObject* Agent::GetGameObject(){
+//--------------------------- ChangeState -------------------------------------
+//-----------------------------------------------------------------------------
+void Miner::ChangeState(State* pNewState)
+{
+  //make sure both states are both valid before attempting to 
+  //call their methods
+	//so this is where the decision making would go in
+	//joy, trust, fear, surprise, sadness, disgust, anger, anticipation
+	anger = map.GetMatrixB(0, 0);
+	 joy= map.GetMatrixB(0, 1);
+	 trust= map.GetMatrixB(0, 2);
+	 anticipation= map.GetMatrixB(0, 3);
+	 fear= map.GetMatrixB(0, 4);
+	 surprise= map.GetMatrixB(0, 5);
+	 sadness= map.GetMatrixB(0, 6);
+	 disgust= map.GetMatrixB(0, 7);
+	 //If statements determining what states to go to if the values are at set thingoes
 
-	return &body;
+	 
+  assert (m_pCurrentState && pNewState);
+
+  //call the exit method of the existing state
+  m_pCurrentState->Exit(this);
+
+  //change state to the new state
+  m_pCurrentState = pNewState;
+
+  //call the entry method of the new state
+  m_pCurrentState->Enter(this);
 }
-/*
-void Agent::Set1By8(){
+
+//-----------------------------------------------------------------------------
+void Miner::Update()
+{
+  //idk put stuff here that you want to change each loop through
+  if (m_pCurrentState)
+  {
+    m_pCurrentState->Execute(this);
+  }
+}
+//NEEDS ACTUAL VALUES INPUT
+void Miner::SetMatrix(){	
 	map.FillMatrixB(0, 0, joy);
 	map.FillMatrixB(0, 1, trust);
 	map.FillMatrixB(0, 2, fear);
@@ -120,15 +150,13 @@ void Agent::Set1By8(){
 	map.FillMatrixA(7, 4, 0);
 	map.FillMatrixA(7, 5, 0);
 	map.FillMatrixA(7, 6, 0);
-}
-
-*/
-
-void Agent::UpdateAgent(double time){
 
 
 }
 
-Agent::~Agent(void)
-{
+void Miner::MoveToward(){
+	int targetPos;
+	int moveSpeed = 5;
+	NPC.GetGameObject()->setPos(NPC.GetGameObject()->getPosx()+moveSpeed, NPC.GetGameObject()->getPosy()+moveSpeed, NPC.GetGameObject()->getPosz()+moveSpeed);
+	
 }
