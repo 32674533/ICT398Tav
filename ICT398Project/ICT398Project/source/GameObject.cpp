@@ -5,12 +5,13 @@ GameObject::GameObject(void)
 {
 }
 
-GameObject::GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr)
+GameObject::GameObject(io::path model, float x, float y, float z, float initMass, scene::ISceneManager* smgr, btCollisionWorld* colWorld)
 {
 	modelFile = model;
 	xPos = x;
 	yPos = y;
 	zPos = z;
+	mass = initMass;
 	//scale = scal;
 	//io::path test = model;
 	node = 0;
@@ -20,9 +21,16 @@ GameObject::GameObject(io::path model, float x, float y, float z, scene::ISceneM
 	node->getMaterial(0).NormalizeNormals = true;
 	node->getMaterial(0).Lighting = true;
 
+	// Point mass setup
+	int numPoints = (int)node->getMesh()->getMeshBuffer(0)->getIndexCount();
+	pointMass = mass / (float)numPoints;
+
 	// Bullet stuff
 	collider = new btCollisionObject();
 	collider->getWorldTransform().setOrigin(btVector3((btScalar)xPos, (btScalar)yPos, (btScalar)zPos));
+	collider->setCollisionShape(new btBoxShape(btVector3((btScalar)(node->getTransformedBoundingBox().getExtent().X / 2), (btScalar)(node->getTransformedBoundingBox().getExtent().Y / 2),
+														 (btScalar)(node->getTransformedBoundingBox().getExtent().Z / 2))));
+	colWorld->addCollisionObject(collider);
 }
 
 void GameObject::setScale(float scal){

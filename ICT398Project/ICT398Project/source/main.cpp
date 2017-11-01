@@ -12,6 +12,7 @@
 #include <driverChoice.h>
 #include "GameObject.h"
 #include "MyEventReceiver.h"
+#include "physics/Types.h"
 //this is here for in the future in case implementation of bullet is needed
 #include "../bullet3-2.86.1/src/btBulletCollisionCommon.h"
 #include "../bullet3-2.86.1/src/btBulletDynamicsCommon.h"
@@ -27,14 +28,24 @@ enum
 
 int main()
 {
+	// Variables for physics
+	types::Vector3D camPosVec, camTargetVec, camLookAt;
+
 	// Bullet setup
 	btCollisionConfiguration* collisionConfig;
 	btCollisionDispatcher* dispatch;
 	btBroadphaseInterface* broadphase;
 	btCollisionWorld* collisionWorld;
+	double collisionWorldSize = 300;
+	unsigned int maxCollisionObjs = 200; // Just giving a semi-reasonable limit
+
+	btVector3 worldAABBMax((btScalar)collisionWorldSize, (btScalar)collisionWorldSize, (btScalar)collisionWorldSize),
+			  worldAABBMin(-(btScalar)collisionWorldSize, -(btScalar)collisionWorldSize, -(btScalar)collisionWorldSize);
 
 	collisionConfig = new btDefaultCollisionConfiguration();
 	dispatch = new btCollisionDispatcher(collisionConfig);
+	broadphase = new bt32BitAxisSweep3(worldAABBMin, worldAABBMax, maxCollisionObjs, 0, true);
+	collisionWorld = new btCollisionWorld(dispatch, broadphase, collisionConfig);
 
 	// create device
     MyEventReceiver receiver;
@@ -71,7 +82,7 @@ int main()
 
 	//fps cam
 	scene::ICameraSceneNode* camera = 
-		smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, 0, keyMap, 8, 3.f);
+		smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, 0, keyMap, 8, true, 3.f);
 
 	//scene::ICameraSceneNode* camera =
 		//smgr->addCameraSceneNodeFPS(0, 100.0f, .1f, 0, 0, true, 3.f);
@@ -81,13 +92,15 @@ int main()
 	//gets rid of mouse cursor
 	device->getCursorControl()->setVisible(false);
 
+	
+
 	// The loading of the actual model
 	scene::IAnimatedMeshSceneNode* node = 0;
 	//GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* node);
 	//from starting position towards you is -x, right is -z
-	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, smgr);
-	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, smgr);
-	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, smgr);
+	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, 10, smgr, collisionWorld);
+	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, 10, smgr, collisionWorld);
+	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, 5, smgr, collisionWorld);
 	//t1.setScale(0.001);
 	//GameObject t2;
 
@@ -140,6 +153,19 @@ int main()
 	while(device->run())
 	if (device->isWindowActive())
 	{
+		//New experimental stuff - Alfie
+		// Camera position as physics vector
+		camPosVec.x = (float)camera->getPosition().X;
+		camPosVec.y = (float)camera->getPosition().Y;
+		camPosVec.z = (float)camera->getPosition().Z;
+
+		// Camera target as physics vector
+		camTargetVec.x = (float)camera->getTarget().X;
+		camTargetVec.y = (float)camera->getTarget().Y;
+		camTargetVec.z = (float)camera->getTarget().Z;
+
+		// Look-at unit vector derived from above two
+		camLookAt = (camTargetVec - camPosVec).normalise();
 
 		driver->beginScene(true, true, 0);
 		smgr->drawAll();
@@ -163,16 +189,28 @@ int main()
 		//remove this code after we get splash screen working
 		int fps = driver->getFPS();
 		
-		if (lastFPS != fps)
-		{
+		//if (lastFPS != fps)
+		//{
 			core::stringw str = L"Collision detection example - Irrlicht Engine [";
 			str += driver->getName();
 			str += "] FPS:";
 			str += fps;
+			// testing camera look-at
+			str += ", Camera look-at: (";
+			str += camLookAt.x;
+			str += ", ";
+			str += camLookAt.y;
+			str += ", ";
+			str += camLookAt.z;
+			str += "), Cube point mass: ";
+			str += t1.getPointMass();
+			str += "kg, Cone point mass: ";
+			str += t3.getPointMass();
+			str += "kg";
 
 			device->setWindowCaption(str.c_str());
 			lastFPS = fps;
-		}
+		//}
 		
 	}
 
