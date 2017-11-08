@@ -30,6 +30,7 @@ private:
 	void SetMatrix();
 	FCM map;
 	Agent NPC;
+	/*
   	float anger;
 	float joy;
 	float trust;
@@ -38,11 +39,20 @@ private:
 	float surprise;
 	float sadness;
 	float disgust;
+	*/
 	void MoveToward();
 public:
 	Miner();
 	Miner(int id);
-
+	//yes I know it's terrible to have these as public, may change later didn't feel like writing 16 getter and setters
+	float anger;
+	float joy;
+	float trust;
+	float anticipation;
+	float fear;
+	float surprise;
+	float sadness;
+	float disgust;
   //this must be implemented
 	void Update();
 

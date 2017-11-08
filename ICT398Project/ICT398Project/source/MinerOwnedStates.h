@@ -39,7 +39,7 @@ public:
 };
 
 //------------------------------------------------------------------------
-//
+//was just gonna have them run at the player-
 //------------------------------------------------------------------------
 class Fight : public State
 {
@@ -68,7 +68,7 @@ class Wander : public State
 private:
 	Wander(){}
 	Wander(const Flee&);
-	Wander& operator=(const Flee&);
+	Wander& operator=(const Wander&);
 public:
 	static Wander* Instance();
 
@@ -78,5 +78,31 @@ public:
 
 	virtual void Exit(Miner* miner);
 };
+
+//------------------------------------------------------------------------
+//
+//------------------------------------------------------------------------
+//idk class for picking up stuff
+class PickUp : public State
+{
+private:
+	PickUp(){}
+	PickUp(const PickUp&);
+	PickUp& operator=(const PickUp&);
+public:
+	static PickUp* Instance();
+
+	virtual void Enter(Miner* miner);
+
+	virtual void Execute(Miner* miner);
+
+	virtual void Exit(Miner* miner);
+};
+
+
+//
+//----------------------------------------------
+
+
 
 #endif

@@ -20,10 +20,11 @@ public:
 	void FillMatrixB(int px, int py, float point);
 	float GetMatrixA(int px, int py);
 	float GetMatrixB(int px, int py);
+	void NewMatrix();
 private:
 	//mat A(8, 8);
 	//this is the 8 by 8 matrix
-	void NewMatrix();
+	
 	mat A;
 	
 	//this is the 1 by 8 matrix

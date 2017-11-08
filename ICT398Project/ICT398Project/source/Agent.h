@@ -1,5 +1,5 @@
 #pragma once
-
+//@notes May need to remove this class it is kinda pointless, need to somehow keep track of time for cycle reasons - ie 1 cycle every half a second
 #include "GameObject.h"
 #include "FCM.h"
 //#include "Miner.h"
