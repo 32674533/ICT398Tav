@@ -41,5 +41,3 @@ private:
 	scene::IAnimatedMeshSceneNode* node;
 	btCollisionObject* collider;
 };
-
-

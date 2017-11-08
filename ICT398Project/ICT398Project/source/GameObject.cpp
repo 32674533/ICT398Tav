@@ -57,3 +57,11 @@ float GameObject::getPosz(){
 scene::IAnimatedMeshSceneNode* GameObject::GetNode(){
 	return node;
 }
+
+void GameObject::setPos(float x, float y, float z){
+	xPos =x;
+	yPos =y;
+	zPos =z;
+	node->setPosition(core::vector3df(xPos,yPos,zPos));
+
+}
