@@ -59,6 +59,14 @@ double physics::forceToTorque(double force, double radius){
 	return (force * radius);
 }
 
+double physics::MMoIRectangle(double mass, double xLength, double yLength){
+	return (mass * ((xLength * xLength) + (yLength * yLength)) / 12);
+}
+
+double physics::MMoISphere(double mass, double radius){
+	return ((2/5) * mass * radius * radius);
+}
+
 double physics::parallelAxisMMoI(double mmoi, double mass, double axisDist){
 	return (mmoi + (mass * axisDist * axisDist));
 }

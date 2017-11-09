@@ -38,6 +38,7 @@ int main()
 	btCollisionWorld* collisionWorld;
 	double collisionWorldSize = 300;
 	unsigned int maxCollisionObjs = 200; // Just giving a semi-reasonable limit
+	int collisionManifolds;
 
 	btVector3 worldAABBMax((btScalar)collisionWorldSize, (btScalar)collisionWorldSize, (btScalar)collisionWorldSize),
 			  worldAABBMin(-(btScalar)collisionWorldSize, -(btScalar)collisionWorldSize, -(btScalar)collisionWorldSize);
@@ -166,6 +167,27 @@ int main()
 
 		// Look-at unit vector derived from above two
 		camLookAt = (camTargetVec - camPosVec).normalise();
+
+		// Bullet collision detection
+		collisionWorld->performDiscreteCollisionDetection();
+		collisionManifolds = collisionWorld->getDispatcher()->getNumManifolds();
+
+		for(int i = 0; i < collisionManifolds; i++) {
+			btPersistentManifold* contactManifold = collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
+			btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
+			btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
+			contactManifold->refreshContactPoints(obA->getWorldTransform(), obB->getWorldTransform());
+			int numContacts = contactManifold->getNumContacts();
+
+			//For each contact point in that manifold
+			for(int j = 0; j < numContacts; j++) {
+				//Get the contact information
+				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				btVector3 ptA = pt.getPositionWorldOnA();
+				btVector3 ptB = pt.getPositionWorldOnB();
+				double ptdist = pt.getDistance();
+			}
+		}
 
 		driver->beginScene(true, true, 0);
 		smgr->drawAll();

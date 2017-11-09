@@ -44,6 +44,12 @@ namespace physics{
 	// t = Fr
 	double forceToTorque(double force, double radius);
 
+	// Mass moments of inertia (for inertia tensor)
+	// Rectangular shape - I(xx) = I(yy) = I(zz) = (1/12) * m * (otherAxis1Length^2 + otherAxis2Length^2)
+	double MMoIRectangle(double mass, double xLength, double yLength);
+	// Sphere - I(xx) = I(yy) = I(zz) = (2/5) * mr^2
+	double MMoISphere(double mass, double radius);
+
 	//Parallel axis theorem
 	// I = I(0) + md^2
 	double parallelAxisMMoI(double mmoi, double mass, double axisDist);
