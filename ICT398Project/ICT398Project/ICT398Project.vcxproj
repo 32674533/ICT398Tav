@@ -79,6 +79,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\dependencies\include;..\dependencies\bullet3-2.86.1\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -97,6 +98,7 @@
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\MyEventReceiver.h" />
     <ClCompile Include="source\physics\equations.cpp" />
+    <ClCompile Include="source\physics\PhysicsObject.cpp" />
     <ClCompile Include="source\physics\Types.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +116,7 @@
     <ClInclude Include="source\affordance.h" />
     <ClInclude Include="source\GameObject.h" />
     <ClInclude Include="source\physics\equations.h" />
+    <ClInclude Include="source\physics\PhysicsObject.h" />
     <ClInclude Include="source\physics\Types.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
