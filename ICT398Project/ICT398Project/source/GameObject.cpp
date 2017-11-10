@@ -5,13 +5,12 @@ GameObject::GameObject(void)
 {
 }
 
-GameObject::GameObject(io::path model, float x, float y, float z, float initMass, scene::ISceneManager* smgr, btCollisionWorld* colWorld)
+GameObject::GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr, btCollisionWorld* colWorld)
 {
 	modelFile = model;
 	xPos = x;
 	yPos = y;
 	zPos = z;
-	mass = initMass;
 	//scale = scal;
 	//io::path test = model;
 	node = 0;
@@ -20,10 +19,6 @@ GameObject::GameObject(io::path model, float x, float y, float z, float initMass
 	//node->setScale(core::vector3df(2000.0f));
 	node->getMaterial(0).NormalizeNormals = true;
 	node->getMaterial(0).Lighting = true;
-
-	// Point mass setup
-	int numPoints = (int)node->getMesh()->getMeshBuffer(0)->getIndexCount();
-	pointMass = mass / (float)numPoints;
 
 	// Bullet stuff
 	collider = new btCollisionObject();

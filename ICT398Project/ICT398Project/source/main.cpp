@@ -99,9 +99,9 @@ int main()
 	scene::IAnimatedMeshSceneNode* node = 0;
 	//GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* node);
 	//from starting position towards you is -x, right is -z
-	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, 10, smgr, collisionWorld);
-	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, 10, smgr, collisionWorld);
-	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, 5, smgr, collisionWorld);
+	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, smgr, collisionWorld);
+	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, smgr, collisionWorld);
+	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, smgr, collisionWorld);
 	//t1.setScale(0.001);
 	//GameObject t2;
 
@@ -168,7 +168,7 @@ int main()
 		// Look-at unit vector derived from above two
 		camLookAt = (camTargetVec - camPosVec).normalise();
 
-		// Bullet collision detection
+		// Bullet collision detection - for now it only detects and collects info about collisions
 		collisionWorld->performDiscreteCollisionDetection();
 		collisionManifolds = collisionWorld->getDispatcher()->getNumManifolds();
 
@@ -224,11 +224,7 @@ int main()
 			str += camLookAt.y;
 			str += ", ";
 			str += camLookAt.z;
-			str += "), Cube point mass: ";
-			str += t1.getPointMass();
-			str += "kg, Cone point mass: ";
-			str += t3.getPointMass();
-			str += "kg";
+			str += ")";
 
 			device->setWindowCaption(str.c_str());
 			lastFPS = fps;
