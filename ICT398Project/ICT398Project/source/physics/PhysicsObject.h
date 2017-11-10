@@ -16,7 +16,7 @@ namespace physics{
 		types::Vector3D getLinVel();
 
 		// !! REMEMBER THAT THE VELOCITY AFTER COLLISION AND THE COLLISION NORMAL CAN BE CROSS-PRODUCTED TO CALCULATE THE ROTATION AXIS !!
-		void collisionResponse(PhysicsObject otherObj);
+		//void collisionResponse(PhysicsObject otherObj); // Not complete
 	private:
 		types::Vector3D position, com, linVelocity, rotAxis;
 		types::Matrix3x3 inertia, inertiaAdjust, rotation;
