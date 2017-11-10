@@ -16,6 +16,10 @@
 //this is here for in the future in case implementation of bullet is needed
 #include "../bullet3-2.86.1/src/btBulletCollisionCommon.h"
 #include "../bullet3-2.86.1/src/btBulletDynamicsCommon.h"
+//remove this, purely here for testing
+#include "FCM.h"
+#include "Miner.h"
+#include <map>
 using namespace irr;
 
 #ifdef _MSC_VER
@@ -25,6 +29,7 @@ using namespace irr;
 enum
 {
 };
+
 
 int main()
 {
@@ -36,24 +41,28 @@ int main()
 	btCollisionDispatcher* dispatch;
 	btBroadphaseInterface* broadphase;
 	btCollisionWorld* collisionWorld;
+	//use this to store all the objects in the game world
+	//use worldObjects.size() to get how many objects there are
+	std::map<int, GameObject&> worldObjects;
 	double collisionWorldSize = 300;
 	unsigned int maxCollisionObjs = 200; // Just giving a semi-reasonable limit
-	int collisionManifolds;
-
+	float count=0; //keeps track of milliseconds since last cycle
+	float maxCount = 200; //how often you want AI logic to update, is in milliseconds
 	btVector3 worldAABBMax((btScalar)collisionWorldSize, (btScalar)collisionWorldSize, (btScalar)collisionWorldSize),
 			  worldAABBMin(-(btScalar)collisionWorldSize, -(btScalar)collisionWorldSize, -(btScalar)collisionWorldSize);
-
+	//removethis ************************************************
+	
 	collisionConfig = new btDefaultCollisionConfiguration();
 	dispatch = new btCollisionDispatcher(collisionConfig);
 	broadphase = new bt32BitAxisSweep3(worldAABBMin, worldAABBMax, maxCollisionObjs, 0, true);
 	collisionWorld = new btCollisionWorld(dispatch, broadphase, collisionConfig);
-
+	//////End of bullet stuff
 	// create device
     MyEventReceiver receiver;
 
 	//Irrlicht gives us a variety of devices to choose from, we are using openGL
 	//device type, window size, bits per pixel in fullscreen fullscreen or not
-	IrrlichtDevice *device = createDevice(video::EDT_OPENGL, core::dimension2d<u32>(1280, 720), 16, false, false, false, &receiver);
+	IrrlichtDevice *device = createDevice(video::EDT_OPENGL, core::dimension2d<irr::u32>(1280, 720), 16, false, false, false, &receiver);
 	scene::IMetaTriangleSelector* mainTriangleSelector = 0;
 	if (device == 0)
 		return 1; // could not create selected driver.
@@ -99,9 +108,31 @@ int main()
 	scene::IAnimatedMeshSceneNode* node = 0;
 	//GameObject(io::path model, float x, float y, float z, scene::ISceneManager* smgr, scene::IAnimatedMeshSceneNode* node);
 	//from starting position towards you is -x, right is -z
-	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, smgr, collisionWorld);
-	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, smgr, collisionWorld);
-	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, smgr, collisionWorld);
+
+	//GAME OBJECT CREATION/AGENT  CREATION
+	GameObject t1("../dependencies/models/cube.3ds", -80, 0, -60, 10, smgr, collisionWorld, device);
+	t1.SetAfford(true, true, 10.0f, 0);
+	//this is our agent game Object
+	GameObject t2("../dependencies/models/cube.3ds", -80, 0, -200, 10, smgr, collisionWorld, device);
+	t2.SetAfford(false, true, 80.0f, 30);
+	GameObject t3("../dependencies/models/cone.3ds", -80, 0, 0, 5, smgr, collisionWorld, device);
+	t3.SetAfford(false, true, 40.0f, 0);
+	worldObjects.insert(std::make_pair(0, t1));
+	worldObjects.insert(std::make_pair(1, t2));
+	worldObjects.insert(std::make_pair(2, t3));
+	//worldObjects[0] = t1;
+	//worldObjects[1] = t2;
+	//worldObjects[2] = t3;
+	//Our Agent, the number is just it's ID, would come into play if we had lots of agents, otherwise it's kinda pointless
+	Miner miner(1);
+	miner.MinerCreateBody(t2);
+	miner.SetWorldObjects(&worldObjects);
+	//this is important for the agent update cycles
+	//u32 time
+	//irr::u32 time = device->getTimer()->getTime();
+	float DeltaTime=0;
+	float time=0;
+	
 	//t1.setScale(0.001);
 	//GameObject t2;
 
@@ -119,7 +150,7 @@ int main()
 	
 	// Loading of Splash Screen
 	video::ITexture* images = driver->getTexture("../dependencies/textures/SplashScreen.png");
-    driver->makeColorKeyTexture(images, core::position2d<s32>(0,0));
+    driver->makeColorKeyTexture(images, core::position2d<irr::s32>(0,0));
 	bool SplashScreenCheck = false;
 
 	if (node)
@@ -151,11 +182,25 @@ int main()
 
 	int lastFPS = -1;
 	//simulation loop
+
+	int ted =0;
+	
 	while(device->run())
 	if (device->isWindowActive())
 	{
 		//New experimental stuff - Alfie
 		// Camera position as physics vector
+		//printf("%u\n", time);
+		DeltaTime = device->getTimer()->getTime() - time;
+		 time = device->getTimer()->getTime();
+		 count +=DeltaTime;
+		 if(count >= maxCount){
+			 //update Agents
+			 miner.Update();
+			 count =0;
+		 }
+		//printf("%e\n", DeltaTime);
+		
 		camPosVec.x = (float)camera->getPosition().X;
 		camPosVec.y = (float)camera->getPosition().Y;
 		camPosVec.z = (float)camera->getPosition().Z;
@@ -168,30 +213,28 @@ int main()
 		// Look-at unit vector derived from above two
 		camLookAt = (camTargetVec - camPosVec).normalise();
 
-		// Bullet collision detection - for now it only detects and collects info about collisions
-		collisionWorld->performDiscreteCollisionDetection();
-		collisionManifolds = collisionWorld->getDispatcher()->getNumManifolds();
-
-		for(int i = 0; i < collisionManifolds; i++) {
+		driver->beginScene(true, true, 0);
+		smgr->drawAll();
+		// We're all done drawing, so end the scene.
+		int numManifolds = collisionWorld->getDispatcher()->getNumManifolds();
+		//FUZZY THINGY TEST METHOD
+		//_+_++_+_++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		for (int i = 0; i < numManifolds; i++) {
 			btPersistentManifold* contactManifold = collisionWorld->getDispatcher()->getManifoldByIndexInternal(i);
 			btCollisionObject* obA = (btCollisionObject*)(contactManifold->getBody0());
 			btCollisionObject* obB = (btCollisionObject*)(contactManifold->getBody1());
 			contactManifold->refreshContactPoints(obA->getWorldTransform(), obB->getWorldTransform());
 			int numContacts = contactManifold->getNumContacts();
-
-			//For each contact point in that manifold
-			for(int j = 0; j < numContacts; j++) {
-				//Get the contact information
+    //For each contact point in that manifold
+			for (int j = 0; j < numContacts; j++) {
+			  //Get the contact information
 				btManifoldPoint& pt = contactManifold->getContactPoint(j);
+				//so this works out the position of the two points of collision as well as the distance between them?
 				btVector3 ptA = pt.getPositionWorldOnA();
 				btVector3 ptB = pt.getPositionWorldOnB();
 				double ptdist = pt.getDistance();
 			}
 		}
-
-		driver->beginScene(true, true, 0);
-		smgr->drawAll();
-		// We're all done drawing, so end the scene.
 
 		if(receiver.IsKeyDown(irr::KEY_KEY_X))
 		{
@@ -199,8 +242,8 @@ int main()
 		}
 		if (SplashScreenCheck == true)
 		{
-			driver->draw2DImage(images, core::position2d<s32>(300,50),
-			core::rect<s32>(0,0,600,600), 0,
+			driver->draw2DImage(images, core::position2d<irr::s32>(300,50),
+			core::rect<irr::s32>(0,0,600,600), 0,
 			video::SColor(255,255,255,255), true);
 			if(receiver.IsKeyDown(irr::KEY_LBUTTON))
 			{
@@ -209,14 +252,18 @@ int main()
 		}
 		driver->endScene();
 		//remove this code after we get splash screen working
-		int fps = driver->getFPS();
-		
+		//int fps = driver->getFPS();
+		if(count >= maxCount){
+			//call update agent
+			miner.Update();
+			
+		}
 		//if (lastFPS != fps)
 		//{
 			core::stringw str = L"Collision detection example - Irrlicht Engine [";
 			str += driver->getName();
-			str += "] FPS:";
-			str += fps;
+			//str += "] FPS:";
+			//str += fps;
 			// testing camera look-at
 			str += ", Camera look-at: (";
 			str += camLookAt.x;
@@ -224,10 +271,14 @@ int main()
 			str += camLookAt.y;
 			str += ", ";
 			str += camLookAt.z;
-			str += ")";
+			str += "), Cube point mass: ";
+			str += t1.getPointMass();
+			str += "kg, Cone point mass: ";
+			str += t3.getPointMass();
+			str += "kg";
 
 			device->setWindowCaption(str.c_str());
-			lastFPS = fps;
+			//lastFPS = fps;
 		//}
 		
 	}
